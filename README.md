@@ -21,15 +21,195 @@ O código é composto pelos seguintes elementos:
 
 4. **Templates HTML:** A aplicação utiliza dois arquivos HTML localizados na pasta "templates" para renderizar as páginas da aplicação. O arquivo "index.html" exibe a tabela de registros e o formulário de adição, enquanto o arquivo "edit.html" apresenta o formulário preenchido para a edição de um registro específico. Esses templates garantem uma interface amigável para o usuário. 🖥️
 
-## Como utilizar o código 💡
+## Como utilizar o código - Passo a Passo 💡
 
-Para utilizar o código:
+## Passo 1 - PostgreSQL - Criando a tabela que irá receber os dados
 
-1. Certifique-se de ter o Python instalado em seu sistema.
-2. Instale as bibliotecas Flask e psycopg2 utilizando o gerenciador de pacotes `pip`.
-3. Configure corretamente as informações de conexão com o seu banco de dados PostgreSQL no código.
-4. Execute o arquivo `app.py` para iniciar a aplicação Flask.
-5. Abra um navegador e acesse `http://localhost:5000` para ver a aplicação em funcionamento.
+```sql
+-- Criando a tabela
+create table tabela_crud (
+	id    serial primary key,
+    name  varchar(100),
+	email varchar(100)
+); -- drop table tabela_crud;
+
+-- Consultando a tabela
+select * from tabela_crud;
+```
+
+## Passo 2 - Python - Instalando as bibliotecas necessárias
+
+Certifique-se de ter o Python instalado em seu sistema. Sugiro a plataforma do [Anaconda](https://www.anaconda.com/).
+
+Instale a biblioteca `Flask` para criar a aplicação web:
+```
+pip install flask
+```
+
+Instale a biblioteca `psycopg2` para se conectar ao banco de dados PostgreSQL:
+```
+pip install psycopg2
+```
+
+## Passo 2 - Python - Criando a aplicação ("backend")
+
+Crie um arquivo Python chamado `app.py` e adicione o seguinte código:
+
+```python
+from flask import Flask, render_template, request, redirect
+import psycopg2
+
+app = Flask(__name__, template_folder='templates')
+
+# Configurações do banco de dados
+db_config = {
+    'host': 'localhost',
+    'port': '5432',
+    'database': 'seu_banco_de_dados',
+    'user': 'seu_usuario',
+    'password': 'sua_senha'
+}
+
+# Conexão com o banco de dados
+conn = psycopg2.connect(**db_config)
+cursor = conn.cursor()
+
+# Rota para exibir os registros da tabela
+@app.route('/')
+def index():
+    # Consulta os registros da tabela
+    cursor.execute("SELECT * FROM tabela_crud")
+    records = cursor.fetchall()
+    return render_template('index.html', records=records)
+
+# Rota para adicionar um novo registro
+@app.route('/add', methods=['POST'])
+def add():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        
+        # Insere um novo registro na tabela
+        cursor.execute("INSERT INTO tabela_crud (name, email) VALUES (%s, %s)", (name, email))
+        conn.commit()
+        
+    return redirect('/')
+
+# Rota para editar um registro existente
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+def edit(id):
+    cursor.execute("SELECT * FROM tabela_crud WHERE id = %s", (id,))
+    record = cursor.fetchone()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        
+        # Atualiza o registro na tabela
+        cursor.execute("UPDATE tabela_crud SET name = %s, email = %s WHERE id = %s", (name, email, id))
+        conn.commit()
+        
+        return redirect('/')
+    
+    return render_template('edit.html', record=record)
+
+# Rota para excluir um registro
+@app.route('/delete/<int:id>')
+def delete(id):
+    # Exclui o registro da tabela
+    cursor.execute("DELETE FROM tabela_crud WHERE id = %s", (id,))
+    conn.commit()
+    
+    return redirect('/')
+
+if __name__ == '__main__':
+    app.run(debug=True)
+```
+
+## Passo 3 - Crie uma pasta Templates e os arquivos HTML ("frontend")
+Crie no mesmo local do arquivo `app.py`, uma pasta chamada: `templates` e adicione nela dois arquivos HTML. 
+
+Nomeie o primeiro arquivo como `index.html` e adicione o seguinte código:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Integrando o Python ao PostgreSQL</title>
+</head>
+<body>
+    <h1>Integrando o Python ao PostgreSQL</h1>
+
+    <form action="/add" method="POST">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <br><br>
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <br>
+
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Ações</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record[0] }}</td>
+            <td>{{ record[1] }}</td>
+            <td>{{ record[2] }}</td>
+            <td>
+                <a href="/edit/{{ record[0] }}">Editar</a>
+                <a href="/delete/{{ record[0] }}">Excluir</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+```
+
+Crie outro arquivo HTML (na pasta `\templates`) chamado `edit.html` e adicione o seguinte código:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Registro</title>
+</head>
+<body>
+    <h1>Editar Registro</h1>
+
+    <form action="/edit/{{ record[0] }}" method="POST">
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" value="{{ record[1] }}" required>
+        <br><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ record[2] }}" required>
+        <br><br>
+        <button type="submit">Salvar</button>
+    </form>
+</body>
+</html>
+```
+## Passo 4 - Verificaçoes
+Certifique-se de substituir `'seu_banco_de_dados'`, `'seu_usuario'` e `'sua_senha'` pelas informações corretas do seu banco de dados PostgreSQL.
+
+## Passo 5 - Executando
+
+Execute o aplicativo Flask digitando o seguinte comando no terminal:
+
+```
+python app.py
+```
+
+Abra um navegador e acesse `http://localhost:5000` para ver a tabela de CRUD em ação. Você poderá adicionar registros, editar registros existentes e excluí-los.
 
 Com esses passos, você poderá aprender como uma aplicação Python lança dados dentro de um banco de dados PostgreSQL e como visualizar e manipular esses dados por meio de uma interface web interativa. É um excelente ponto de partida para explorar o desenvolvimento de aplicativos web com Python e bancos de dados PostgreSQL! 🚀📊
 
