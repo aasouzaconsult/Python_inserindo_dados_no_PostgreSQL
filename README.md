@@ -23,7 +23,7 @@ O código é composto pelos seguintes elementos:
 
 ## Como utilizar o código - Passo a Passo 💡
 
-## Passo 1 - PostgreSQL - Criando a tabela que irá receber os dados
+### Passo 1 - PostgreSQL - Criando a tabela que irá receber os dados
 
 ```sql
 -- Criando a tabela
@@ -37,7 +37,7 @@ create table tabela_crud (
 select * from tabela_crud;
 ```
 
-## Passo 2 - Python - Instalando as bibliotecas necessárias
+### Passo 2 - Python - Instalando as bibliotecas necessárias
 
 Certifique-se de ter o Python instalado em seu sistema. Sugiro a plataforma do [Anaconda](https://www.anaconda.com/).
 
@@ -51,7 +51,7 @@ Instale a biblioteca `psycopg2` para se conectar ao banco de dados PostgreSQL:
 pip install psycopg2
 ```
 
-## Passo 2 - Python - Criando a aplicação ("backend")
+### Passo 3 - Python - Criando a aplicação ("backend")
 
 Crie um arquivo Python chamado `app.py` e adicione o seguinte código:
 
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     app.run(debug=True)
 ```
 
-## Passo 3 - Crie uma pasta Templates e os arquivos HTML ("frontend")
+### Passo 4 - Crie uma pasta Templates e os arquivos HTML ("frontend")
 Crie no mesmo local do arquivo `app.py`, uma pasta chamada: `templates` e adicione nela dois arquivos HTML. 
 
 Nomeie o primeiro arquivo como `index.html` e adicione o seguinte código:
@@ -198,10 +198,11 @@ Crie outro arquivo HTML (na pasta `\templates`) chamado `edit.html` e adicione o
 </body>
 </html>
 ```
-## Passo 4 - Verificaçoes
+
+### Passo 5 - Verificaçoes
 Certifique-se de substituir `'seu_banco_de_dados'`, `'seu_usuario'` e `'sua_senha'` pelas informações corretas do seu banco de dados PostgreSQL.
 
-## Passo 5 - Executando
+##$ Passo 6 - Executando
 
 Execute o aplicativo Flask digitando o seguinte comando no terminal:
 
@@ -211,6 +212,7 @@ python app.py
 
 Abra um navegador e acesse `http://localhost:5000` para ver a tabela de CRUD em ação. Você poderá adicionar registros, editar registros existentes e excluí-los.
 
+## Conclusão
 Com esses passos, você poderá aprender como uma aplicação Python lança dados dentro de um banco de dados PostgreSQL e como visualizar e manipular esses dados por meio de uma interface web interativa. É um excelente ponto de partida para explorar o desenvolvimento de aplicativos web com Python e bancos de dados PostgreSQL! 🚀📊
 
 Lembre-se de adaptar o código conforme necessário para atender às suas necessidades específicas e explorar outras funcionalidades disponíveis nessas tecnologias. Aproveite e divirta-se criando suas próprias aplicações! 😊💻
