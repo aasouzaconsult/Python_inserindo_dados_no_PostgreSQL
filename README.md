@@ -28,13 +28,15 @@ O código é composto pelos seguintes elementos:
 ```sql
 -- Criando a tabela
 create table tabela_crud (
-	id    serial primary key,
+    id    serial primary key,
     name  varchar(100),
-	email varchar(100)
-); -- drop table tabela_crud;
+    email varchar(100)
+);
 
 -- Consultando a tabela
-select * from tabela_crud;
+select *
+  from tabela_crud
+ where 1 = 1;
 ```
 
 ### Passo 2 - Python - Instalando as bibliotecas necessárias
