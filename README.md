@@ -29,10 +29,10 @@ Para utilizar o código:
 2. Instale as bibliotecas Flask e psycopg2 utilizando o gerenciador de pacotes `pip`.
 3. Configure corretamente as informações de conexão com o seu banco de dados PostgreSQL no código.
 4. Execute o arquivo `app.py` para iniciar a aplicação Flask.
-5. Abra um navegador e acesse `http://localhost:5000` para ver a aplicação em funcionamento
-
-.
+5. Abra um navegador e acesse `http://localhost:5000` para ver a aplicação em funcionamento.
 
 Com esses passos, você poderá aprender como uma aplicação Python lança dados dentro de um banco de dados PostgreSQL e como visualizar e manipular esses dados por meio de uma interface web interativa. É um excelente ponto de partida para explorar o desenvolvimento de aplicativos web com Python e bancos de dados PostgreSQL! 🚀📊
 
 Lembre-se de adaptar o código conforme necessário para atender às suas necessidades específicas e explorar outras funcionalidades disponíveis nessas tecnologias. Aproveite e divirta-se criando suas próprias aplicações! 😊💻
+
+Bons estudos
